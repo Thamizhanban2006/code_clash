@@ -14,8 +14,10 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', router);
 
+app.get('/',(req,res)=>res.send("helooo"));
+
 // MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/codeclash', {
+mongoose.connect(process.env.MONGO_URI , {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
