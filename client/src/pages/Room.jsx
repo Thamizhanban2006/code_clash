@@ -28,7 +28,7 @@ export default function Room() {
     socket.emit('join-room', { roomId, playerName });
 
     // request initial room state from REST as fallback (optional)
-    axios.get(`http://localhost:3000/api/${roomId}`)
+    axios.get(`https://code-clash-1-3a96.onrender.com/${roomId}`)
       .then(res => {
         const room = res.data;
         setPlayers(room.players || []);
@@ -100,7 +100,7 @@ export default function Room() {
       const myCode = codes[socket.id];
       if (typeof myCode === 'string') {
         try {
-          await axios.post('http://localhost:3000/api/update-code', {
+          await axios.post('https://code-clash-1-3a96.onrender.com/api/update-code', {
             roomId, socketId: socket.id, code: myCode
           });
         } catch (err) {
@@ -126,7 +126,7 @@ export default function Room() {
 
   const runCode = async () => {
     try {
-      const res = await axios.post('http://localhost:3000/api/run', {
+      const res = await axios.post('https://code-clash-1-3a96.onrender.com/api/run', {
         code: codes[socket.id] || '',
         input: (question && question.input) ? question.input : '',
         language: 'python'
