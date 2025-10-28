@@ -12,7 +12,7 @@ export function SocketProvider({ children }) {
   useEffect(() => {
     if (!socketRef.current) {
       // force websocket transport to avoid polling issues during dev
-      socketRef.current = io('http://localhost:3000', { transports: ['websocket'] });
+      socketRef.current = io('https://code-clash-1-3a96.onrender.com', { transports: ['websocket'] });
       socketRef.current.on('connect', () => setConnected(true));
       socketRef.current.on('disconnect', () => setConnected(false));
     }
