@@ -19,15 +19,17 @@ export default function Room() {
   const mySocket = socket?.id || null;
   const typingRef = useRef(null);
   const saveIntervalRef = useRef(null);
-  const playerNameRef = useRef('Player' + Math.floor(Math.random() * 10000));
+  const storedUsername = localStorage.getItem('username');
+  const playerNameRef = useRef(storedUsername || 'Guest' + Math.floor(Math.random() * 10000));
   const playerName = playerNameRef.current;
+
 
   // join room once when mount + socket ready
   useEffect(() => {
     if (!socket || !roomId) return;
     socket.emit('join-room', { roomId, playerName });
 
-    // request initial room state from REST as fallback (optional)
+  
     axios.get(`https://code-clash-1-3a96.onrender.com/${roomId}`)
       .then(res => {
         const room = res.data;
@@ -44,6 +46,14 @@ export default function Room() {
       socket.emit('leave-room', roomId);
     };
   }, [socket, roomId, playerName]);
+
+
+  useEffect(() => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    navigate('/login');
+  }
+}, [navigate]);
 
   // socket handlers
   useEffect(() => {
