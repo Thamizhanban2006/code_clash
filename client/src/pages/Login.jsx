@@ -14,7 +14,7 @@ export default function Login() {
     const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/users/login", form);
+      const res = await axios.post("https://code-clash-1-3a96.onrender.com/api/users/login", form);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", res.data.user.username);
 

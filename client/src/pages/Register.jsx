@@ -12,7 +12,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/users/register", form);
+      const res = await axios.post("https://code-clash-1-3a96.onrender.com/api/users/register", form);
       
       alert("✅ Registration successful!");
      localStorage.setItem("token", res.data.token);
