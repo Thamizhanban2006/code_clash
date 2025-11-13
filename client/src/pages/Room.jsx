@@ -44,7 +44,7 @@ export default function Room() {
 
     // fallback: fetch latest room state
     axios
-      .get(`http://localhost:3000/api/${roomId}`)
+      .get(`https://code-clash-1-3a96.onrender.com/api/${roomId}`)
       .then((res) => {
         const room = res.data;
         setPlayers(room.players || []);
@@ -113,7 +113,7 @@ export default function Room() {
     saveIntervalRef.current = setInterval(async () => {
       const myCode = codes[socket.id];
       if (myCode) {
-        await axios.post('http://localhost:3000/api/update-code', {
+        await axios.post('https://code-clash-1-3a96.onrender.com/api/update-code', {
           roomId,
           socketId: socket.id,
           code: myCode,
@@ -136,7 +136,7 @@ export default function Room() {
   // --- Run code ---
   const runCode = async () => {
     try {
-      const res = await axios.post('http://localhost:3000/api/run', {
+      const res = await axios.post('https://code-clash-1-3a96.onrender.com/api/run', {
         code: codes[socket.id] || '',
         language: 'python',
         questionId: question._id,
@@ -227,7 +227,7 @@ export default function Room() {
           <span>Input: {c.input}</span>
           <span>Expected Output: {c.expected}</span>
           <span>Output: {c.output}</span>
-          <span>Status: {c.passed}</span>
+          {/* <span>Status: {c.passed}</span> */}
 
         </div>
       ))}

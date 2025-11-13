@@ -12,7 +12,7 @@ export function SocketProvider({ children }) {
   useEffect(() => {
     if (!socketRef.current) {
       const lastSocketId = localStorage.getItem('lastSocketId');
-      socketRef.current = io('http://localhost:3000', {
+      socketRef.current = io('https://code-clash-1-3a96.onrender.com', {
         transports: ['websocket'],
         auth: { lastSocketId: lastSocketId || null },
         reconnectionAttempts: 5,
