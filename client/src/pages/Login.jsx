@@ -30,12 +30,14 @@ export default function Login() {
     }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+   <div className="flex flex-col items-center justify-center h-screen bg-black">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-xl shadow-md w-80"
+        className="bg-[#1A1A1A] p-6 rounded-xl shadow-[0_0_20px_#00FF41] w-80"
       >
-        <h2 className="text-2xl mb-4 font-bold text-center">Login</h2>
+        <h2 className="text-2xl mb-4 font-bold text-center text-[#39FF14]">
+          Login
+        </h2>
 
         <input
           name="email"
@@ -43,26 +45,34 @@ export default function Login() {
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
-          className="border p-2 rounded w-full mb-3"
+          className="bg-black border border-[#00FF41] p-2 rounded w-full mb-3 text-[#00FF41]"
           required
         />
+
         <input
           name="password"
           type="password"
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
-          className="border p-2 rounded w-full mb-3"
+          className="bg-black border border-[#00FF41] p-2 rounded w-full mb-3 text-[#00FF41]"
           required
         />
 
         <button
           type="submit"
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full"
+          className="bg-[#00FF41] hover:bg-[#39FF14] text-black px-4 py-2 rounded w-full font-semibold"
         >
           Login
         </button>
+
+       <div
+          onClick={() => navigate("/register")}
+          className="text-[#39FF14] mt-3 text-center cursor-pointer hover:underline"
+        >
+          Don’t have an account? Sign up
+        </div>
       </form>
-    </div>
+</div>
   );
 }

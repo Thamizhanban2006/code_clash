@@ -7,6 +7,20 @@ const playerSchema = new mongoose.Schema({
   online: { type: Boolean, default: true }
 });
 
+const questionSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  sampleInput: { type: String, default: '' },
+  sampleOutput: { type: String, default: '' },
+  testCases: [
+    {
+      input: String,
+      expectedOutput: String
+    }
+  ],
+  difficulty: { type: String, default: 'Easy' }
+});
+
 const roomSchema = new mongoose.Schema({
   roomId: { type: String, required: true, unique: true },
   players: [playerSchema],
@@ -24,14 +38,7 @@ const roomSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-const questionSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  input: String,
-  expectedOutput: String,
-  difficulty: { type: String, default: 'Easy' }
-});
-
 const Room = mongoose.model('Room', roomSchema);
 const Questions = mongoose.model('Question', questionSchema);
+
 module.exports = { Room, Questions };

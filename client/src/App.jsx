@@ -11,16 +11,20 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-[#0a0a0a] text-[#d1fae5] font-mono flex flex-col">
         <Navbar />
-        <div className="p-6">
+
+        <div className="flex-grow p-6 bg-gradient-to-b from-[#0a0a0a] to-[#111827]">
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-              } />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
 

@@ -31,48 +31,50 @@ export default function Register() {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-xl shadow-md w-80"
-      >
-        <h2 className="text-2xl mb-4 font-bold text-center">Register</h2>
+  <div className="flex flex-col items-center justify-center h-screen bg-black">
+  <form
+    onSubmit={handleSubmit}
+    className="bg-[#1A1A1A] p-6 rounded-xl shadow-[0_0_20px_#00FF41] w-80"
+  >
+    <h2 className="text-2xl mb-4 font-bold text-center text-[#39FF14]">
+      Register
+    </h2>
 
-        <input
-          name="username"
-          placeholder="Username"
-          value={form.username}
-          onChange={handleChange}
-          className="border p-2 rounded w-full mb-3"
-          required
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="border p-2 rounded w-full mb-3"
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="border p-2 rounded w-full mb-3"
-          required
-        />
+    <input
+      name="email"
+      type="email"
+      placeholder="Email"
+      value={form.email}
+      onChange={handleChange}
+      className="bg-black border border-[#00FF41] p-2 rounded w-full mb-3 text-[#00FF41]"
+      required
+    />
 
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full"
-        >
-          Register
-        </button>
-      </form>
-    </div>
+    <input
+      name="password"
+      type="password"
+      placeholder="Password"
+      value={form.password}
+      onChange={handleChange}
+      className="bg-black border border-[#00FF41] p-2 rounded w-full mb-3 text-[#00FF41]"
+      required
+    />
+
+    <button
+      type="submit"
+      className="bg-[#00FF41] hover:bg-[#39FF14] text-black px-4 py-2 rounded w-full font-semibold"
+    >
+      Register
+    </button>
+    <div
+  onClick={() => navigate("/login")}
+  className="text-[#39FF14] mt-3 text-center cursor-pointer hover:underline"
+>
+  Already have an account? Login
+</div>
+  </form>
+</div>
+
   );
 }
 
