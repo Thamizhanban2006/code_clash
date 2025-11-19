@@ -162,13 +162,14 @@ export default function Room() {
   };
 
   return (
-   <div className="min-h-screen bg-[#0a0a0a] text-[#d1fae5] p-6 flex flex-col font-mono">
+ <div className="min-h-screen bg-[#0a0a0a] text-[#d1fae5] p-4 md:p-6 flex flex-col gap-6 font-mono">
+
   {/* 🧑‍💻 Players Section */}
-  <div className="flex justify-between mb-4">
+  <div className="flex flex-wrap justify-between gap-3">
     {players.map((p) => (
       <div
         key={p.socketId}
-        className="text-lg font-semibold flex items-center gap-2 bg-[#111827] px-3 py-2 rounded-lg shadow-md border border-[#10b981]/30"
+        className="text-sm md:text-lg font-semibold flex items-center gap-2 bg-[#111827] px-3 py-2 rounded-lg shadow-md border border-[#10b981]/30 w-full sm:w-auto"
       >
         <span className="text-[#10b981]">{p.online ? '🟢' : '🔴'}</span>
         {p.name}
@@ -178,82 +179,99 @@ export default function Room() {
 
   {/* 🧩 Question Section */}
   {question && (
-    <div className="bg-[#111827] p-5 rounded-xl mb-6 border border-[#10b981]/40 shadow-lg hover:shadow-[#10b981]/20 transition">
-      <h2 className="text-2xl font-bold text-[#10b981] mb-2">
+    <div className="bg-[#111827] p-4 md:p-5 rounded-xl border border-[#10b981]/40 shadow-lg">
+      <h2 className="text-xl md:text-2xl font-bold text-[#10b981] mb-2">
         {question.title}
       </h2>
-      <p className="text-gray-300">{question.description}</p>
-      <div className="mt-3 space-y-1">
-        <p className="text-[#a7f3d0]">
-          <strong>Input:</strong> {question.sampleInput}
-        </p>
-        <p className="text-[#6ee7b7]">
-          <strong>Expected Output:</strong> {question.sampleOutput}
-        </p>
+      <p className="text-gray-300 text-sm md:text-base">{question.description}</p>
+
+      <div className="mt-3 space-y-1 text-sm md:text-base">
+        <p className="text-[#a7f3d0]"><strong>Input:</strong> {question.sampleInput}</p>
+        <p className="text-[#6ee7b7]"><strong>Expected Output:</strong> {question.sampleOutput}</p>
       </div>
     </div>
   )}
 
   {/* 💻 Code Editors */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
     {players.map((p) => (
       <div
         key={p.socketId}
-        className="bg-[#111827] rounded-2xl shadow-md p-3 flex flex-col border border-[#10b981]/30 hover:border-[#10b981]/50 transition"
+        className="bg-[#111827] rounded-2xl shadow-md p-3 flex flex-col border border-[#10b981]/30"
       >
-        <h3 className="font-semibold mb-3 text-center text-[#10b981]">
+        <h3 className="font-semibold mb-3 text-center text-[#10b981] text-sm md:text-lg">
           {p.name}'s Editor
         </h3>
-        <CodeEditor
-          language="python"
-          value={codes[p.socketId] || ''}
-          onChange={p.socketId === socket.id ? handleCodeChange : () => {}}
-        />
+
+        <div className="h-64 md:h-96 overflow-hidden rounded-xl border border-[#10b981]/20">
+          <CodeEditor
+            language="python"
+            value={codes[p.socketId] || ''}
+            onChange={p.socketId === socket.id ? handleCodeChange : () => {}}
+          />
+        </div>
       </div>
     ))}
   </div>
 
   {/* 🧠 Run Code + Output */}
-  <div className="mt-6 bg-[#111827] p-5 rounded-xl border border-[#10b981]/30 shadow-lg">
+  <div className="bg-[#111827] p-4 md:p-5 rounded-xl border border-[#10b981]/30 shadow-lg">
     <button
       className="bg-[#10b981] text-black font-semibold px-5 py-2 rounded-lg hover:bg-[#34d399] transition mr-3"
       onClick={runCode}
     >
       ⚡ Run My Code
     </button>
-    <pre className="bg-[#0a0a0a] p-3 rounded mt-3 h-36 overflow-y-auto text-[#86efac] border ">
-      {output.map((c, i) => (
-        <div key={i} className='flex flex-col border-1 border-red-500 mb-2 p-2'>
-          <span>Input: {c.input}</span>
-          <span>Expected Output: {c.expected}</span>
-          <span>Output: {c.output}</span>
-          {/* <span>Status: {c.passed}</span> */}
 
-        </div>
-      ))}
-    </pre>
+    <div className="bg-[#0a0a0a] p-3 rounded mt-4 max-h-60 overflow-y-auto border border-[#10b981]/20 space-y-3">
+      {Array.isArray(output) &&
+        output.map((c, i) => (
+          <div
+            key={i}
+            className={`p-3 rounded-lg border ${
+              c.passed
+                ? 'border-[#10b981] bg-[#062e1f]'
+                : 'border-red-500 bg-[#2e0606]'
+            }`}
+          >
+            <p><span className="font-bold">Input:</span> {c.input}</p>
+            <p><span className="font-bold">Expected:</span> {c.expected}</p>
+            <p><span className="font-bold">Output:</span> {c.output}</p>
+
+            <p className="font-bold mt-1">
+              Status:{' '}
+              <span className={c.passed ? 'text-[#10b981]' : 'text-red-400'}>
+                {c.passed ? '✔ Passed' : '✘ Failed'}
+              </span>
+            </p>
+          </div>
+        ))}
+    </div>
   </div>
 
   {/* 💬 Chat Section */}
-  <div className="mt-6 bg-[#111827] p-5 rounded-xl border border-[#10b981]/30 shadow-lg">
-    <h3 className="font-semibold mb-3 text-center text-xl text-[#10b981]">
+  <div className="bg-[#111827] p-4 md:p-5 rounded-xl border border-[#10b981]/30 shadow-lg">
+    <h3 className="font-semibold mb-3 text-center text-lg md:text-xl text-[#10b981]">
       💬 Chat Room
     </h3>
-    <div className="h-52 overflow-y-auto border border-[#10b981]/20 p-3 rounded mb-3 bg-[#0a0a0a]">
+
+    <div className="h-52 md:h-64 overflow-y-auto border border-[#10b981]/20 p-3 rounded mb-3 bg-[#0a0a0a]">
       {chat.map((m, idx) => (
-        <div key={idx} className="mb-1">
+        <div key={idx} className="mb-1 text-sm md:text-base">
           <b className="text-[#34d399]">{m.playerName}:</b>{' '}
           <span className="text-gray-300">{m.message}</span>
         </div>
       ))}
     </div>
-    <div className="flex gap-3">
+
+    <div className="flex gap-3 flex-col sm:flex-row">
       <input
         className="flex-1 bg-[#0a0a0a] border border-[#10b981]/30 px-4 py-2 rounded-lg text-[#d1fae5] focus:outline-none focus:border-[#10b981] placeholder-gray-500"
         placeholder="Type your message..."
         value={chatInput}
         onChange={(e) => setChatInput(e.target.value)}
       />
+
       <button
         className="bg-[#10b981] text-black font-semibold px-5 py-2 rounded-lg hover:bg-[#34d399] transition"
         onClick={sendChat}
