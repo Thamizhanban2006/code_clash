@@ -5,6 +5,8 @@ import { io } from 'socket.io-client';
 const SocketContext = createContext(null);
 export const useSocket = () => useContext(SocketContext);
 
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
+
 export function SocketProvider({ children }) {
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
@@ -12,7 +14,7 @@ export function SocketProvider({ children }) {
   useEffect(() => {
     if (!socketRef.current) {
       const lastSocketId = localStorage.getItem('lastSocketId');
-      socketRef.current = io('https://code-clash-1-3a96.onrender.com', {
+      socketRef.current = io(SOCKET_URL, {
         transports: ['websocket'],
         auth: { lastSocketId: lastSocketId || null },
         reconnectionAttempts: 5,
@@ -32,7 +34,7 @@ export function SocketProvider({ children }) {
     }
 
     return () => {
-      // don’t fully disconnect on unmount — preserve session
+      // don't fully disconnect on unmount — preserve session
     };
   }, []);
 

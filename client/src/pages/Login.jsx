@@ -1,78 +1,150 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-
+import { useNavigate, Link } from "react-router-dom";
+import { Mail, Lock, Zap, ArrowRight } from "lucide-react";
 
 export default function Login() {
-    const [form, setForm] = useState({ email: "", password: "" });
-    const navigate = useNavigate();
-    
-    const handleChange = (e) =>
-        setForm({ ...form, [e.target.name]: e.target.value });
-    
-    const handleSubmit = async (e) => {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
       const res = await axios.post("https://code-clash-1-3a96.onrender.com/api/users/login", form);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", res.data.user.username);
-
-      alert("✅ Login successful!");
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
-      alert(err.response?.data?.message || "❌ Login failed!");
+      setError(err.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-};
-    useEffect(() => {
+  };
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) navigate("/dashboard");
-    }, [navigate]);
+    if (token) navigate("/");
+  }, [navigate]);
 
   return (
-   <div className="flex flex-col items-center justify-center h-screen bg-black">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-[#1A1A1A] p-6 rounded-xl shadow-[0_0_20px_#00FF41] w-80"
-      >
-        <h2 className="text-2xl mb-4 font-bold text-center text-[#39FF14]">
-          Login
-        </h2>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-grid-animated opacity-30" />
 
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="bg-black border border-[#00FF41] p-2 rounded w-full mb-3 text-[#00FF41]"
-          required
-        />
+      {/* Gradient orbs */}
+      <div className="absolute top-1/4 left-10 w-72 h-72 bg-[#00ff99]/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-[#00d4ff]/10 rounded-full blur-3xl" />
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="bg-black border border-[#00FF41] p-2 rounded w-full mb-3 text-[#00FF41]"
-          required
-        />
-
-        <button
-          type="submit"
-          className="bg-[#00FF41] hover:bg-[#39FF14] text-black px-4 py-2 rounded w-full font-semibold"
-        >
-          Login
-        </button>
-
-       <div
-          onClick={() => navigate("/register")}
-          className="text-[#39FF14] mt-3 text-center cursor-pointer hover:underline"
-        >
-          Don’t have an account? Sign up
+      <div className="w-full max-w-md relative z-10">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center gap-2 group">
+            <Zap className="w-10 h-10 text-[#00ff99] group-hover:drop-shadow-[0_0_15px_rgba(0,255,153,0.8)] transition-all" />
+            <span className="text-2xl font-bold text-white">
+              Code<span className="text-[#00ff99]">Clash</span>
+            </span>
+          </Link>
         </div>
-      </form>
-</div>
+
+        {/* Card */}
+        <div className="glass-card neon-border p-8 md:p-10">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
+              Welcome Back to <span className="neon-text">Code Clash</span>
+            </h1>
+            <p className="text-white/50">
+              Enter the arena
+            </p>
+          </div>
+
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email Input */}
+            <div>
+              <label className="block text-sm font-medium text-white/70 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="w-full pl-12 pr-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-white/30 focus:border-[#00ff99] focus:shadow-[0_0_15px_rgba(0,255,153,0.2)] transition-all"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password Input */}
+            <div>
+              <label className="block text-sm font-medium text-white/70 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                  className="w-full pl-12 pr-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-white/30 focus:border-[#00ff99] focus:shadow-[0_0_15px_rgba(0,255,153,0.2)] transition-all"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full glow-btn flex items-center justify-center gap-2 py-3.5 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Signing in...' : 'Enter Arena'}
+              {!loading && <ArrowRight className="w-5 h-5" />}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-[#0d1f1a] px-4 text-white/30 text-sm">New to the arena?</span>
+            </div>
+          </div>
+
+          {/* Sign Up Link */}
+          <Link
+            to="/register"
+            className="block w-full py-3.5 text-center font-semibold text-[#00ff99] bg-[#00ff99]/10 border border-[#00ff99]/30 rounded-xl hover:bg-[#00ff99]/20 transition-colors"
+          >
+            Create Fighter Profile
+          </Link>
+        </div>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-white/30 mt-8">
+          © 2026 Code Clash. All rights reserved.
+        </p>
+      </div>
+    </div>
   );
 }
