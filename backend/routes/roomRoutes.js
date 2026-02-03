@@ -1,7 +1,7 @@
 // backend/routes/roomRoutes.js
 const axios = require('axios');
 const express = require('express');
-const { Room, Questions } = require('../models/Room'); 
+const { Room, Questions } = require('../models/Room');
 const router = express.Router();
 
 router.use(express.json());
@@ -97,25 +97,34 @@ router.get('/random-question', async (req, res) => {
 router.get('/:roomId', async (req, res) => {
   try {
     const { roomId } = req.params;
+    const maxPlayers = parseInt(req.query.maxPlayers) || 4;
 
     let room = await Room.findOne({ roomId }).populate('question');
 
-  if (!room) {
-    const count = await Questions.countDocuments();
-    if (count === 0) {
-      return res.status(404).json({ message: 'No questions available' });
+    if (!room) {
+      const count = await Questions.countDocuments();
+      if (count === 0) {
+        return res.status(404).json({ message: 'No questions available' });
+      }
+
+      const randomIndex = Math.floor(Math.random() * count);
+      const randomQuestion = await Questions.findOne().skip(randomIndex);
+
+      // Atomic upsert with maxPlayers
+      room = await Room.findOneAndUpdate(
+        { roomId },
+        {
+          $setOnInsert: {
+            players: [],
+            chat: [],
+            question: randomQuestion._id,
+            maxPlayers: Math.min(4, Math.max(2, maxPlayers)),
+            gameState: 'lobby'
+          }
+        },
+        { new: true, upsert: true }
+      ).populate('question');
     }
-
-    const randomIndex = Math.floor(Math.random() * count);
-    const randomQuestion = await Questions.findOne().skip(randomIndex);
-
-    // ✅ Atomic upsert (prevents duplicates)
-    room = await Room.findOneAndUpdate(
-      { roomId },
-      { $setOnInsert: { players: [], chat: [], question: randomQuestion._id } },
-      { new: true, upsert: true }
-    ).populate('question');
-  }
 
 
     res.json(room);
